@@ -1,0 +1,105 @@
+# LogInspect rule spec for the GCU-P dishwasher control unit.
+#
+# This is a hand-curated, reviewed spec (vs. the auto-generated one from
+# specgen). Each rule maps a telemetry key to a check. Edit freely — the
+# engine validates this file on load and reports any structural problems.
+#
+# Check types: range, enum, forbidden_value, required_keys, nonzero_counter,
+# delta_limit. See docs/RULES.md for the full reference.
+
+name: gcu-p
+version: "1.0"
+
+rules:
+  # --- Fault flags --------------------------------------------------------
+  - id: service_status_error
+    check: forbidden_value
+    key: service_status
+    severity: error
+    description: Service status must not report a fault.
+    params:
+      values: [ERROR, FAULT]
+
+  - id: bldc_active_faults
+    check: forbidden_value
+    key: bldc_status_stmcsdk_faults_active
+    severity: error
+    description: Active motor-controller faults indicate a hardware problem.
+    params:
+      values: [OVER_VOLT, OVER_CURRENT, OVER_TEMP, SPEED_FDBK, START_UP]
+
+  # under-voltage during idle/boot is common; treat as warning not error
+  - id: bldc_undervolt
+    check: forbidden_value
+    key: bldc_status_stmcsdk_faults_active
+    severity: warning
+    description: Under-voltage on the motor controller bus.
+    params:
+      values: [UNDER_VOLT]
+
+  # --- Persistent-storage health -----------------------------------------
+  - id: veeprom_errors
+    check: nonzero_counter
+    key: veeprom_error_cntr
+    severity: error
+    description: EEPROM error counter must stay at zero.
+    params:
+      threshold: 0
+
+  - id: veeprom_settings_errors
+    check: nonzero_counter
+    key: veeprom_settings_error_cntr
+    severity: error
+    description: EEPROM settings error counter must stay at zero.
+    params:
+      threshold: 0
+
+  - id: persist_data_errors
+    check: nonzero_counter
+    key: persist_data_error_cntr
+    severity: error
+    description: Persistent-data error counter must stay at zero.
+    params:
+      threshold: 0
+
+  # --- Sensor ranges ------------------------------------------------------
+  # temperature is reported as a raw ADC-derived value (e.g. 3698). Bounds
+  # below are placeholders — adjust to the real ADC scale for this unit.
+  - id: water_temp_sane
+    check: range
+    key: temperature
+    severity: warning
+    description: Water temperature sensor reading within plausible ADC range.
+    params:
+      min: 0
+      max: 9000
+
+  - id: dc_link_voltage_present
+    check: range
+    key: bldc_status_dc_link_voltage_avrg
+    severity: info
+    description: DC-link voltage average sanity bound.
+    params:
+      min: 0
+      max: 65535
+
+  # --- Diverter consistency ----------------------------------------------
+  - id: diverter_state_known
+    check: enum
+    key: diverter_state
+    severity: warning
+    description: Diverter state should be a known value, not UNDEF for long.
+    params:
+      allowed: [POS_0, POS_1, POS_2, POS_3, MOVING, UNDEF, OK]
+
+  # --- Structural ---------------------------------------------------------
+  - id: core_keys_present
+    check: required_keys
+    severity: error
+    description: Core telemetry keys must be present in any valid log.
+    params:
+      keys:
+        - main_sw
+        - service_state
+        - service_status
+        - temperature

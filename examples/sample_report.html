@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LogInspect Report</title>
+<style>
+  :root { font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+  body { margin: 0; background: #f6f8fa; color: #1f2328; }
+  header { background: #fff; border-bottom: 1px solid #d0d7de; padding: 24px 32px; }
+  h1 { margin: 0 0 4px; font-size: 20px; }
+  .meta { color: #656d76; font-size: 13px; }
+  .status { display:inline-block; font-weight:700; color:#fff; background:#cf222e;
+            padding:4px 12px; border-radius:6px; margin-left:8px; }
+  main { padding: 24px 32px; }
+  .chips { margin: 0 0 20px; display:flex; gap:8px; flex-wrap:wrap; }
+  .chip { background:#fff; border:1px solid; border-radius:20px; padding:4px 12px; font-size:13px; }
+  table { width:100%; border-collapse:collapse; background:#fff; border:1px solid #d0d7de;
+           border-radius:8px; overflow:hidden; font-size:13px; }
+  th, td { text-align:left; padding:8px 12px; border-bottom:1px solid #eaeef2; vertical-align:top; }
+  th { background:#f6f8fa; font-weight:600; }
+  tr:last-child td { border-bottom:none; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .badge { color:#fff; padding:2px 8px; border-radius:12px; font-size:11px; font-weight:600; }
+  tr.sev-critical, tr.sev-error { background:#fff8f8; }
+</style></head>
+<body>
+<header>
+  <h1>LogInspect Report <span class="status">FAIL</span></h1>
+  <div class="meta">
+    Log: <span class="mono">/mnt/user-data/uploads/gcu_dw50_60_20260611_152550_parsed.txt</span><br>
+    Spec: gcu-p v1.0 ·
+    2919 snapshots · 5941 findings · 4 distinct issues
+  </div>
+</header>
+<main>
+  <div class="chips"><span class='chip' style='border-color:#cf222e'><b style='color:#cf222e'>0</b> CRITICAL</span><span class='chip' style='border-color:#d1242f'><b style='color:#d1242f'>2919</b> ERROR</span><span class='chip' style='border-color:#9a6700'><b style='color:#9a6700'>3022</b> WARNING</span><span class='chip' style='border-color:#0969da'><b style='color:#0969da'>0</b> INFO</span></div>
+  <table>
+    <thead><tr><th>Severity</th><th>Rule</th><th>Key</th><th>Message</th>
+    <th>Count</th><th>Snapshots</th><th>Time span</th></tr></thead>
+    <tbody>
+    <tr class='sev-error'><td><span class='badge' style='background:#d1242f'>ERROR</span></td><td>service_status_error</td><td class='mono'>service_status</td><td>service_status reported fault value &#x27;ERROR&#x27;</td><td class='mono'>2919</td><td class='mono'>#0–2918</td><td class='mono'>2026-06-11 15:25:55.003 → 2026-06-11 15:58:05.168</td></tr>
+<tr class='sev-warning'><td><span class='badge' style='background:#9a6700'>WARNING</span></td><td>bldc_undervolt</td><td class='mono'>bldc_status_stmcsdk_faults_active</td><td>bldc_status_stmcsdk_faults_active reported fault value &#x27;UNDER_VOLT&#x27;</td><td class='mono'>2180</td><td class='mono'>#0–2918</td><td class='mono'>2026-06-11 15:25:55.003 → 2026-06-11 15:58:05.168</td></tr>
+<tr class='sev-warning'><td><span class='badge' style='background:#9a6700'>WARNING</span></td><td>diverter_state_known</td><td class='mono'>diverter_state</td><td>diverter_state=&#x27;SYNC&#x27; is not an allowed value</td><td class='mono'>799</td><td class='mono'>#45–843</td><td class='mono'>2026-06-11 15:26:18.157 → 2026-06-11 15:33:00.550</td></tr>
+<tr class='sev-warning'><td><span class='badge' style='background:#9a6700'>WARNING</span></td><td>water_temp_sane</td><td class='mono'>temperature</td><td>temperature=-2301 outside range [0, 9000]</td><td class='mono'>43</td><td class='mono'>#2876–2918</td><td class='mono'>2026-06-11 15:57:44.048 → 2026-06-11 15:58:05.168</td></tr>
+    </tbody>
+  </table>
+</main>
+</body></html>
